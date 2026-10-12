@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#081329">
+<title>ONE AI | ONE WORLD UNIVERSE</title>
+
+<style>
+:root {
+  --bg: #081329;
+  --panel: #122343;
+  --gold: #ffc928;
+  --text: #ffffff;
+  --muted: #b4bfd4;
+}
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #ffffff22;
+}
+
+.logo {
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--gold);
+  color: var(--bg);
+  font-size: 25px;
+  font-weight: bold;
+}
+
+header h1 { margin: 0; font-size: 21px; }
+header small { color: var(--muted); }
+
+main {
+  max-width: 700px;
+  margin: auto;
+  padding: 25px 16px 150px;
+}
+
+.hero { text-align: center; padding: 20px 0; }
+
+.badge {
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.hero h2 {
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.hero h2 span { color: var(--gold); }
+
+.hero p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid #ffffff20;
+  color: white;
+  padding: 16px;
+  border-radius: 14px;
+  text-align: left;
+  font-size: 15px;
+  min-height: 85px;
+}
+
+.card strong { display: block; margin-bottom: 8px; }
+.card small { color: var(--muted); }
+
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.message {
+  padding: 14px;
+  border-radius: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.user {
+  align-self: flex-end;
+  background: var(--gold);
+  color: #111;
+}
+
+.bot {
+  align-self: flex-start;
+  background: var(--panel);
+  width: 95%;
+}
+
+form {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: #081329;
+  border-top: 1px solid #ffffff22;
+}
+
+.inputbox {
+  max-width: 700px;
+  margin: auto;
+  display: flex;
+  gap: 8px;
+}
+
+textarea {
+  flex: 1;
+  min-width: 0;
+  resize: none;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ffffff30;
+  background: var(--panel);
+  color: white;
+  font-size: 16px;
+}
+
+button { cursor: pointer; }
+
+#send {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--gold);
+  color: #081329;
+  font-weight: bold;
+}
+
+#send:disabled { opacity: 0.5; }
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">1</div>
+  <div>
+    <h1>ONE AI</h1>
+    <small>Une intelligence pour tous</small>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="badge">ONE WORLD UNIVERSE</div>
+    <h2>Créons quelque chose<br><span>d'extraordinaire.</span></h2>
+    <p>Pose tes questions, apprends et transforme tes idées en projets.</p>
+  </section>
+
+  <div class="cards">
+    <button class="card" data-prompt="Aide-moi à créer un projet rentable en RDC.">
+      <strong>🚀 Entreprendre</strong>
+      <small>Développer une idée</small>
+    </button>
+
+    <button class="card" data-prompt="Apprends-moi quelque chose de nouveau.">
+      <strong>💡 Apprendre</strong>
+      <small>Découvrir et comprendre</small>
+    </button>
+
+    <button class="card" data-prompt="Propose-moi des idées de vidéos TikTok sans voix off.">
+      <strong>🎬 Créer</strong>
+      <small>Imaginer du contenu</small>
+    </button>
+
+    <button class="card" data-prompt="Aide-moi à résoudre un problème étape par étape.">
+      <strong>🧠 Réfléchir</strong>
+      <small>Trouver des solutions</small>
+    </button>
+  </div>
+
+  <div id="messages"></div>
+
+  <footer>
+    ONE AI — Un projet de ONE WORLD UNIVERSE
+  </footer>
+</main>
+
+<form id="form">
+  <div class="inputbox">
+    <textarea id="prompt" rows="1"
+      placeholder="Écris ton message..."
+      aria-label="Ton message"></textarea>
+    <button id="send" type="submit">Envoyer</button>
+  </div>
+</form>
+
+<script>
+const form = document.getElementById("form");
+const input = document.getElementById("prompt");
+const messages = document.getElementById("messages");
+const send = document.getElementById("send");
+
+let history = [];
+
+function addMessage(text, role) {
+  const element = document.createElement("div");
+  element.className = "message " + role;
+  element.textContent = text;
+  messages.appendChild(element);
+  element.scrollIntoView({ behavior: "smooth", block: "end" });
+  return element;
+}
+
+async function ask(question) {
+  question = question.trim();
+  if (!question || send.disabled) return;
+
+  addMessage(question, "user");
+  history.push({ role: "user", content: question });
+  input.value = "";
+  send.disabled = true;
+
+  const answerBox = addMessage("ONE AI réfléchit...", "bot");
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: history.slice(-16) })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Service indisponible.");
+    }
+
+    const answer = data.reply || "Aucune réponse reçue.";
+    answerBox.textContent = answer;
+    history.push({ role: "assistant", content: answer });
+
+  } catch (error) {
+    answerBox.textContent =
+      "Le service IA n'est pas encore configuré. Nous allons terminer son installation. (" +
+      error.message + ")";
+  } finally {
+    send.disabled = false;
+  }
+}
+
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+  ask(input.value);
+});
+
+document.querySelectorAll("[data-prompt]").forEach(function(button) {
+  button.addEventListener("click", function() {
+    ask(button.dataset.prompt);
+  });
+});
+</script>
+
+</body>
+</html>
